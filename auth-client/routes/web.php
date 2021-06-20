@@ -54,11 +54,11 @@ Route::get('/callback', function (Request $request) {
     $request->session()->put('refreshToken', $response->json()['refresh_token']);
     $request->session()->put('accessToken', "{$response->json()['token_type']} {$response->json()['access_token']}");
 
-    return redirect('/');
+    return redirect(route('home'));
 });
 
 Route::post('/logout', function (Request $request) {
     $request->session()->flush();
 
-    return redirect('/');
+    return redirect(route('home'));
 })->name('logout');
