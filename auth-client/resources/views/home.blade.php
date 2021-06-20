@@ -11,5 +11,21 @@
     </head>
     <body>
         @include('partials._navbar')
+
+        <div class="container">
+        @isset($user)
+        <div v-if="isLoggedIn" class="card">
+            <div class="card-content">
+                <div class="content">
+                    Welcome back <strong>{{ $user['name'] }}!</strong>
+                </div>
+            </div>
+        </div>
+        @else
+            <div class="notification is-danger">
+                You're not logged in!
+            </div>
+        @endisset
+        </div>
     </body>
 </html>

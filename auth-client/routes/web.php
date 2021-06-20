@@ -15,7 +15,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'home');
+Route::get('/', function(Request $request) {
+    if ($request->session()->has('accessToken')) {
+        $accessToken = $request->session()->get('accessToken');
+
+        $response = Http::withHeaders([
+            'Authorization' => $accessToken,
+        ])->get(env('OAUTH_AUTH_SERVER') . '/api/user');
+
+        $user = $response->json();
+
+        return view('home', compact('user'));
+    }
+
+    return view('home');
+})->name('home');
 
 Route::get('/redirect', function (Request $request) {
     $query = http_build_query([
@@ -26,7 +40,7 @@ Route::get('/redirect', function (Request $request) {
     ]);
 
     return redirect(env('OAUTH_AUTH_SERVER') . '/oauth/authorize?'.$query);
-});
+})->name('redirect');
 
 Route::get('/callback', function (Request $request) {
     $response = Http::asForm()->post(env('OAUTH_AUTH_SERVER') . '/oauth/token', [
@@ -37,5 +51,14 @@ Route::get('/callback', function (Request $request) {
         'code' => $request->code,
     ]);
 
-    return $response->json();
+    $request->session()->put('refreshToken', $response->json()['refresh_token']);
+    $request->session()->put('accessToken', "{$response->json()['token_type']} {$response->json()['access_token']}");
+
+    return redirect('/');
 });
+
+Route::post('/logout', function (Request $request) {
+    $request->session()->flush();
+
+    return redirect('/');
+})->name('logout');
