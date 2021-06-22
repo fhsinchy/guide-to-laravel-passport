@@ -21,7 +21,7 @@
         <div class="navbar-end">
         <div class="navbar-item">
             <div class="buttons">
-                @if (request()->session()->has('accessToken'))
+                @if (isLoggedIn())
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
 
