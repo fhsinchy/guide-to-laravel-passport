@@ -1,18 +1,44 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <div v-if="isLoggedIn" class="card">
+        <div class="card-content">
+            <div class="content">
+                Welcome back <strong>{{ user.name }}!</strong>
+            </div>
+        </div>
+    </div>
+    <div v-else class="notification is-danger">
+        You're not logged in!
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import axios from 'axios';
+import store from '@/store';
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      user: {},
+    };
+  },
+  computed: {
+    isLoggedIn() {
+      return !!store.accessToken;
+    },
+  },
+  async mounted() {
+    if (this.isLoggedIn) {
+      const response = await axios.get(`${process.env.VUE_APP_OAUTH_AUTH_SERVER}/api/user`, {
+        headers: {
+          Authorization: `Bearer ${store.accessToken}`,
+        },
+      });
+
+      this.user = response.data;
+    }
   },
 };
 </script>

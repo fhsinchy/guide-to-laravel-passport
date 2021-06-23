@@ -1,32 +1,58 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <nav class="navbar mb-5" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io" target="_blank" rel="noopener noreferrer">
+                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+            </a>
+        </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-start">
+                <router-link to="/" class="navbar-item">Home</router-link>
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <button @click="logout" v-if="isLoggedIn"
+                        class="button is-dark">Log out</button>
+                        <button @click="redirect" v-else class="button is-light">Log in</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <router-view/>
   </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import qs from 'qs';
+import store from '@/store';
 
-#nav {
-  padding: 30px;
-}
+export default {
+  computed: {
+    isLoggedIn() {
+      return !!store.accessToken;
+    },
+  },
+  methods: {
+    redirect() {
+      const queryString = {
+        client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
+        redirect_uri: process.env.VUE_APP_OAUTH_CLIENT_REDIRECT,
+        response_type: 'code',
+        scope: '',
+      };
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+      window.location.href = `${process.env.VUE_APP_OAUTH_AUTH_SERVER}/oauth/authorize?${qs.stringify(queryString)}`;
+    },
+    logout() {
+      store.accessToken = null;
+      window.localStorage.removeItem('accessToken');
+      window.localStorage.removeItem('refreshToken');
+    },
+  },
+};
+</script>
