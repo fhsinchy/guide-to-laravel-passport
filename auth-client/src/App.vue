@@ -29,13 +29,11 @@
 
 <script>
 import qs from 'qs';
-import store from '@/store';
+import { getters, actions } from '@/store';
 
 export default {
   computed: {
-    isLoggedIn() {
-      return !!store.accessToken;
-    },
+    isLoggedIn: () => getters.isLoggedIn(),
   },
   methods: {
     redirect() {
@@ -49,9 +47,7 @@ export default {
       window.location.href = `${process.env.VUE_APP_OAUTH_AUTH_SERVER}/oauth/authorize?${qs.stringify(queryString)}`;
     },
     logout() {
-      store.accessToken = null;
-      window.localStorage.removeItem('accessToken');
-      window.localStorage.removeItem('refreshToken');
+      actions.logout();
     },
   },
 };

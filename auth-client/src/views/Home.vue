@@ -15,7 +15,7 @@
 
 <script>
 import axios from 'axios';
-import store from '@/store';
+import { getters } from '@/store';
 
 export default {
   name: 'Home',
@@ -25,17 +25,11 @@ export default {
     };
   },
   computed: {
-    isLoggedIn() {
-      return !!store.accessToken;
-    },
+    isLoggedIn: () => getters.isLoggedIn(),
   },
   async mounted() {
     if (this.isLoggedIn) {
-      const response = await axios.get(`${process.env.VUE_APP_OAUTH_AUTH_SERVER}/api/user`, {
-        headers: {
-          Authorization: `Bearer ${store.accessToken}`,
-        },
-      });
+      const response = await axios.get(`${process.env.VUE_APP_OAUTH_AUTH_SERVER}/api/user`);
 
       this.user = response.data;
     }
