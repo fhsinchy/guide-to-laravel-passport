@@ -29,9 +29,13 @@ export default {
   },
   async mounted() {
     if (this.isLoggedIn) {
-      const response = await axios.get(`${process.env.VUE_APP_OAUTH_AUTH_SERVER}/api/user`);
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_OAUTH_AUTH_SERVER}/api/user`);
 
-      this.user = response.data;
+        this.user = response.data;
+      } catch (error) {
+        console.log(error);
+      }
     }
   },
 };
