@@ -41,7 +41,6 @@ export default function configureAxios() {
           refresh_token: window.localStorage.getItem('refreshToken'),
           client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
           client_secret: process.env.VUE_APP_OAUTH_CLIENT_SECRET,
-          scope: '',
         });
 
         mutations.setToken(res.data.access_token);

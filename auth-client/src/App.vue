@@ -41,7 +41,6 @@ export default {
         client_id: process.env.VUE_APP_OAUTH_CLIENT_ID,
         redirect_uri: process.env.VUE_APP_OAUTH_CLIENT_REDIRECT,
         response_type: 'code',
-        scope: '',
       };
 
       window.location.href = `${process.env.VUE_APP_OAUTH_AUTH_SERVER}/oauth/authorize?${qs.stringify(queryString)}`;
