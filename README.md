@@ -1,6 +1,6 @@
 # guide-to-laravel-passport
 
-This is a reference project for **An In-Depth Guide to API Authentication With Laravel Passport** article.
+This is a reference project for [An In-Depth Guide to API Authentication With Laravel Passport](https://adevait.com/laravel/api-authentication-with-laravel-passport) article published on [Adeva Blog](https://adevait.com/blog).
 
 ## Installation Steps
 
